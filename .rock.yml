@@ -2,6 +2,7 @@ runtime: ruby21
 
 env:
   HTTP_PORT: "${HTTP_PORT:-8080}"
+  ROCK_ENV: development
 
 run: exec shotgun --server=thin --port=$HTTP_PORT config.ru
 
