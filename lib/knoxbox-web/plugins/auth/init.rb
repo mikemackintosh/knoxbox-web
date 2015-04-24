@@ -1,14 +1,16 @@
 require 'signet/oauth_2/client'
 require 'google/api_client'
 require 'httparty'
-controller do 
 
+controller do 
+# Google Auth Stuff
   def api_client; settings.api_client; end
   def gplus; settings.gplus; end
 
+# User Creds helper for oauth
   def user_credentials
-    # Build a per-request oauth credential based on token stored in session
-    # which allows us to use a shared API client.
+  # Build a per-request oauth credential based on token stored in session
+  # which allows us to use a shared API client.
     @authorization ||= (
       auth = self.api_client.authorization.dup
       auth.redirect_uri = to('/auth')
@@ -16,7 +18,33 @@ controller do
       auth
     )
   end
-  
+
+# Helper for checking if user is authenticated
+  def is_authenticated?
+    return !!session[:user]
+  end
+
+# Create a user object from the session
+  def current_user
+    return unless session[:user]
+    User.find_by_username(session[:user]['username']).first
+  end
+
+# Create a helper for is_admin?
+  def is_admin?
+    current_user && current_user.is_admin?
+  end
+
+# Condition based
+  set(:auth) do |*roles|
+    condition do
+      unless roles.any? { |role| (role == :user) ? is_user? : is_authenticated?(role) }
+        redirect_to '/login'
+      end
+    end
+  end
+
+# Configure some Authentication Stuff
   configure do
   # Set Things for Google-ness
   #  -> https://console.developers.google.com
@@ -28,7 +56,7 @@ controller do
       raise "Please be sure to load your 'client_secrets.json', as provided by Google."
     end
 
-    # Init new Client
+  # Init new Client
     client = Google::APIClient.new(
       :application_name => 'KnoxBox',
       :application_version => KnoxBoxWeb::VERSION,
@@ -45,7 +73,7 @@ controller do
       )
     )
 
-    # Splice them into KnoxBoxWeb::Application.settings
+  # Splice them into KnoxBoxWeb::Application.settings
     set :gplus, client.discovered_api('plus', 'v1')
     set :api_client, client
   end
@@ -77,12 +105,12 @@ controller do
     session[:issued_at] = user_credentials.issued_at
   end
 
-  # Make the user click login
+# Make the user click login
   get '/login' do
     erb :login
   end
 
-  # Log the user out
+# Log the user out
   get '/logout' do
       
   # Revoke the token
@@ -106,24 +134,26 @@ controller do
 
   get '/auth' do
     begin
-      # Exchange token
+    # Exchange token
       user_credentials.code = params[:code] if params[:code]
       user_credentials.fetch_access_token!
 
-      # Set Session Details
+    # Set Session Details
       session[:access_token] = user_credentials.access_token
       session[:refresh_token] = user_credentials.refresh_token
       session[:expires_in] = user_credentials.expires_in
       session[:issued_at] = user_credentials.issued_at
 
-      # HTTParty
+    # HTTParty to get hosted domain validation
       result = HTTParty.get("https://www.googleapis.com/plus/v1/people/me/openIdConnect?hd=#{HOSTED_DOMAIN}&access_token=#{user_credentials.access_token}")
+      puts result.inspect
 
-      # Check for a 200
+    # Check for a 200
       unless result.code.eql? 200
         halt 401, erb(:error)
       end
       
+    # Yay for having a parsable response!
       user_info = result.parsed_response
       if user_info['hd'].eql? HOSTED_DOMAIN
         user_info['username'] = user_info['email'].gsub(HOSTED_DOMAIN, '')
