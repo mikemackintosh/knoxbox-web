@@ -1,3 +1,8 @@
 /.bundle/
 /vendor/
 *.gem
+/config/client_secrets.json
+/config/config.yml
+/config/config.yaml
+/config/databases.yml
+/config/databases.yaml
