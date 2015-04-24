@@ -16,7 +16,7 @@ module KnoxBoxWeb
     use Rack::Session::Cookie, :key => 'knoxbox.session',
                            :path => '/',
                            :expire_after => 3600,
-                           :secret => 't6xws7f8BSSWcP7INqCrcA==' #SecureRandom.base64
+                           :secret => 't6xws7f8BSSWcP7INqCrcAs==' #SecureRandom.base64
 
   # Default configuration 
     configure do
@@ -41,36 +41,21 @@ module KnoxBoxWeb
       set       :static,            true
 
     # Define these, they are important for OpenVPN
-      set :ca_cert, '/opt/knoxbox/keys/ca.crt'    
-      set :ca_key, '/opt/knoxbox/keys/ca.key'
-    end
-
-  # Helper for checking if user is authenticated
-    def is_authenticated?
-      return !!session[:user]
+      set :ca_cert, Config.get(:database)[:ca_cert]
+      set :ca_key, Config.get(:database)[:ca_key]
     end
 
   # Define route conditions on environment
     set(:is_env) {|value| condition{value == settings.environment}}
-  # Condition based
-    set(:auth) do |*roles|
-      condition do
-        unless roles.any? { |role| (role == :user) ? is_user? : is_authorized?(role) }
-          handle_unauthorized_access(roles)
-        end
-      end
-    end
 
   # Read the Application Configs
-    if File.exist?(ENV['KNOXBOXWEB_CONFIG'].to_s)
-      set :config, YAML::load(File.read(ENV['KNOXBOXWEB_CONFIG']))[KnoxBoxWeb::Application.environment.to_s]
+    unless Config.get(:global).nil?
+      set :config, Config
     end
-    
-  # Make sure the config exists
-    if File.exist?(ENV['KNOXBOXWEB_DATABASE_CONFIG'].to_s)
-      db_config = YAML::load(File.read(ENV['KNOXBOXWEB_DATABASE_CONFIG']))[KnoxBoxWeb::Application.environment.to_s]
-    # Create the database connection
-      ActiveRecord::Base.establish_connection(db_config)
+  
+  # Create the database connection
+    unless Config.get(:database).nil?   
+      ActiveRecord::Base.establish_connection(Config.get(:database))
     end
 
   # Discover plugins
