@@ -1,8 +1,11 @@
 controller do 
   namespace '/' do
     get '/' do
-      puts session.inspect
-      puts "----------------"
+      
+      if is_admin?
+        
+      end
+
       erb :index
     end
   end 

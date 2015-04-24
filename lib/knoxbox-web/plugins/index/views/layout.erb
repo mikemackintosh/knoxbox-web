@@ -41,15 +41,16 @@
 
                 <!--<% if is_authenticated? %>-->
 
+                  <!--<% if is_admin? %>-->
                   <li class="dropdown"> 
-                     <a href="#" class="dropdown-toggle" data-toggle="dropdown">Configuration<b class="caret"></b></a>
+                     <a href="#" class="dropdown-toggle" data-toggle="dropdown">Administration<b class="caret"></b></a>
                          <ul class="dropdown-menu">
-                          <li><a href="ui_elements_general.html">General</a></li>
-                          <li><a href="ui_elements_buttons.html">Buttons</a></li>
-                          <li><a href="ui_elements_tabs_accordions.html">Tabs &amp; Accordions</a></li>
-                          <li><a href="ui_elements_typography.html">Typography</a></li>
+                          <li><a href="/server">Server</a></li>
+                          <li><a href="/users">Users</a></li>
                      </ul>
-                  </li>
+                  </li>                  
+                  <!--<% end %>-->
+
 
                 <!--<% else %>-->
                   <li><a href="/login">Login</a></li>
