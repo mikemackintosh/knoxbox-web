@@ -27,7 +27,7 @@ controller do
 # Create a user object from the session
   def current_user
     return unless session[:user]
-    User.find_by_username(session[:user]['username']).first
+    User.find_by_username(session[:user]['username'])
   end
 
 # Create a helper for is_admin?
@@ -128,10 +128,12 @@ controller do
     redirect '/'
   end
 
+# OAuth2 Hook
   get '/authorize' do
     redirect user_credentials.authorization_uri.to_s, 303
   end
 
+# OAuth2 Callback
   get '/auth' do
     begin
     # Exchange token
@@ -146,7 +148,6 @@ controller do
 
     # HTTParty to get hosted domain validation
       result = HTTParty.get("https://www.googleapis.com/plus/v1/people/me/openIdConnect?hd=#{HOSTED_DOMAIN}&access_token=#{user_credentials.access_token}")
-      puts result.inspect
 
     # Check for a 200
       unless result.code.eql? 200
@@ -156,8 +157,24 @@ controller do
     # Yay for having a parsable response!
       user_info = result.parsed_response
       if user_info['hd'].eql? HOSTED_DOMAIN
-        user_info['username'] = user_info['email'].gsub(HOSTED_DOMAIN, '')
+        user_info['username'] = user_info['email'].gsub("@#{HOSTED_DOMAIN}", '')
         session[:user] = user_info
+
+      # Time to add user details to the database
+        @user = User.find_or_create_by(username: session[:user]['username'])
+        @user.given_name = session[:user]['given_name']
+        @user.family_name = session[:user]['family_name']
+        @user.email = session[:user]['email']
+        @user.picture = session[:user]['picture']
+      
+      # Only create a secret if it doesnt exist already
+        if @user.secret.nil?
+          @user.secret = (0...16).map { ('A'..'Z').to_a[rand(26)] }.join
+        end
+      
+      # Save the user details
+        @user.save!
+
         redirect to('/')
       else
         halt 403, erb(:unauthorized)

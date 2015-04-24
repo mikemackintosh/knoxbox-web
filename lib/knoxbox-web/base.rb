@@ -41,8 +41,8 @@ module KnoxBoxWeb
       set       :static,            true
 
     # Define these, they are important for OpenVPN
-      set :ca_cert, Config.get(:database)[:ca_cert]
-      set :ca_key, Config.get(:database)[:ca_key]
+      set :ca_cert, Config.get(:'openvpn.ca_cert')
+      set :ca_key, Config.get(:'openvpn.ca_key')
     end
 
   # Define route conditions on environment
@@ -50,7 +50,7 @@ module KnoxBoxWeb
 
   # Read the Application Configs
     unless Config.get(:global).nil?
-      set :config, Config
+      set :config, Config.get(:global)
     end
   
   # Create the database connection
