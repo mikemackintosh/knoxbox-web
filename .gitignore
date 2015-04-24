@@ -6,3 +6,4 @@
 /config/config.yaml
 /config/databases.yml
 /config/databases.yaml
+Gemfile.lock
