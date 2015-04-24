@@ -20,15 +20,24 @@ module KnoxBoxWeb
         @config.symbolize_keys_deep!
       end
 
-      def get(key)
-        env = KnoxBoxWeb::Application.environment.to_sym
-        return @config[env][key.to_sym] unless @config[env][key.to_sym].nil?
-        return @config[:global][key.to_sym] unless @config[:global][key.to_sym].nil?
-        nil
+      def get(key, default=nil)
+        rv = nil
+
+        [*key].each do |k|
+          rv = @config.get(k.to_s)
+          break unless rv.nil?
+
+          rv = @config.get(KnoxBoxWeb::Application.environment.to_s << '.' << k.to_s)
+          break unless rv.nil?
+        end
+
+        return default if rv.nil?
+        return rv
       end
 
-      def set(key, value)
-        @config.set(key, value)
+      def get!(key)
+        rv = @config.get(key)
+        return rv
       end
 
       def to_h
