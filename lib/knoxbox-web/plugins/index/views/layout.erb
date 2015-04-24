@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--><html class="no-js" lang="en" ><!--<![endif]-->
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <meta name="author" content="Mike Mackintosh"/>
+    <meta name="robots" content="noindex" />
+    <link rel="shortcut icon" href="/favicon.png">
+    <title><%= @page_title ||= 'KnoxBox - OpenVPN Management' %></title>
+    <!-- Bootstrap core CSS -->
+    <link href="/css/bootstrap.css" rel="stylesheet">
+    <!-- Custom styles for this template -->
+    <link href="/css/style.css" rel="stylesheet">
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+    <script src="/js/html5shiv.js"></script>
+    <script src="/js/respond.min.js"></script>
+    <![endif]-->
+    <script src="/js/custom.modernizr.js" type="text/javascript" ></script>
+
+  </head>
+  <body>
+    <!-- Main Container starts here -->
+    <div class="container">
+      <div class="row navbar-fixed-top" id="top-navigation">
+        <!-- Navigation header starts here -->
+          <header class=" col-sm-12 col-md-10">
+            <div class="navbar navbar-default">
+              <div class="navbar-header">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                  <span class="icon-bar"></span>
+                  <span class="icon-bar"></span>
+                  <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand" href="/"><img src="/logo.png" width="24" height="24" title="knoxbox"/></i>KnoxBox</a>
+              </div>
+              <div class="navbar-collapse collapse">
+                <ul class="nav navbar-nav navbar-right">
+                  <li><a href="/">Home</a></li>
+
+                <!--<% if is_authenticated? %>-->
+                  <li class="dropdown"> 
+                     <a href="#" class="dropdown-toggle" data-toggle="dropdown">Configuration<b class="caret"></b></a>
+                         <ul class="dropdown-menu">
+                          <li><a href="ui_elements_general.html">General</a></li>
+                          <li><a href="ui_elements_buttons.html">Buttons</a></li>
+                          <li><a href="ui_elements_tabs_accordions.html">Tabs &amp; Accordions</a></li>
+                          <li><a href="ui_elements_typography.html">Typography</a></li>
+                     </ul>
+                  </li>
+                <!--<% else %>-->
+
+                <!--<% end %>-->
+                 </ul>
+              </div><!--/.nav-collapse -->
+            </div>
+          </header>
+
+        <!--<% if is_authenticated? %>-->
+
+          <!-- Navigation header ends here -->
+          <div class="col-xs-12 col-sm-12 col-md-2 nav-user">
+            <ul class="nav navbar-nav pull-right">
+              <li class="dropdown">
+                <a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="glyphicon glyphicon-user"></i> <%= session[:user]['given_name'] %><b class="caret"></b></a>
+                <ul class="dropdown-menu">
+                  <li><a href="profile.html"><i class="glyphicon glyphicon-cog"></i> My Profile</a></li> 
+                  <li><a href="messengers.html"><i class="glyphicon glyphicon-comment"></i><span class="badge pull-right badge-primary">5</span>Chat</a></li>
+                  <li><a href="login.html"><i class="glyphicon glyphicon-log-out"></i>Logout</a></li>
+                </ul>
+              </li>
+            </ul>
+          </div>
+        <!--<% end %>-->
+
+      </div>
+
+      <!-- begin rendered content -->
+      <%= yield %>
+      <!-- end rendered content -->
+    </div>
+    <footer class="footer">
+      <p> 
+      <!-- Copyright information. You can remove my site link. --> 
+      Copyright © 2015 | <a href="https://knoxbox.github.io">KnoxBox</a> | Maintained by <a href="https://twitter.com/#/mikemackintosh">Mike Mackintosh</a>
+      </p>
+    </footer>
+    <!-- Main Container ends here -->
+    <!-- Bootstrap core JavaScript
+    ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+
+    <!-- Important js put in all pages -->
+    <script>
+      window.jQuery || document.write('<script src="/js/jquery.js"><\/script>')
+    </script>
+    <script src="/js/bootstrap.min.js"></script>
+    <!-- Important js for all pages end  -->
+    <!-- Fix plugins -->
+    <script type="text/javascript" src="/js/ios-orientationchange-fix.js"></script>
+    <!-- knob plugins -->
+    <script src="/js/jquery.knob.js"></script>
+
+    <!-- Data table plugins -->
+    <script src="/js/jquery.dataTables.min.js"></script>
+
+    <!-- Charts plugins -->
+    <script type="text/javascript" src="/js/chart/jquery.flot.min.js"></script>
+    <script type="text/javascript" src="/js/chart/jquery.flot.stack.min.js"></script>
+    <script type="text/javascript" src="/js/chart/jquery.flot.resize.min.js"></script>
+
+    <!-- Init plugins and custom javascript-->
+    <script src="/js/custom.js"></script>
+  </body>
+</html>
