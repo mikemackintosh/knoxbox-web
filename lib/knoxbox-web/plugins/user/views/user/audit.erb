@@ -1,0 +1,21 @@
+<div class="ibox-content" id="ibox-content">
+  <div id="vertical-timeline" class="vertical-container dark-timeline center-orientation">
+<!--<% @audit_logs.each do |audit| %>-->
+    <div class="vertical-timeline-block">
+          <div class="vertical-timeline-icon navy-bg">
+              <i class="fa fa-<%= audit.icon %>"></i>
+          </div>
+
+          <div class="vertical-timeline-content">
+              <h2><%= audit.category %></h2>
+              <p><%= audit.message %></p>
+              <p class="text-muted small">This action was recorded from <b><%= audit.remote_host %></b></p>
+              <span class="vertical-date">
+                  <%= relative_time_ago audit.created_at %> ago<br>
+                  <small><%= audit.created_at %></small>
+              </span>
+          </div>
+    </div>
+<!--<% end %>-->
+  </div>
+</div>

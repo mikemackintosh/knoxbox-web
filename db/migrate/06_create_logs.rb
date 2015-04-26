@@ -2,6 +2,7 @@ class CreateLogs < ActiveRecord::Migration
   def up
     create_table :logs do |t|
       t.string :message
+      t.string :category
       t.string :remote_host
       t.string :cn
       t.string :instance_id
