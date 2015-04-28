@@ -1,0 +1,74 @@
+<div class="ibox float-e-margins">
+    <div class="ibox-content">
+        <div>
+            <span class="pull-right text-right">
+            <small>Recent logins for user: <strong><%= session[:user]['username'] %></strong></small>
+                <br>
+                Total Logins: <%= @total_logins %>
+            </span>
+            <h3 class="font-bold no-margins">
+                Recent Logins
+            </h3>
+            <small>Both Self-Service and VPN</small>
+        </div>
+
+        <div class="m-t-sm">
+
+            <div class="row">
+                <div class="col-md-8">
+                  <div class="ibox-content" style="position: relative">
+                    <div id="lineChart"></div>
+                  </div>
+                </div>
+                <div class="col-md-4">
+                    <ul class="stat-list m-t-lg">
+                        <li>
+                            <h2 class="no-margins"><%= @logins['login'] %></h2>
+                            <small>Self-Service Portal Logins</small>
+                            <div class="progress progress-mini">
+                                <div class="progress-bar" style="width: <%= p(@logins['login'],@total_logins)%>%;"></div>
+                            </div>
+                        </li>
+                        <li>
+                            <h2 class="no-margins "><%= @logins['login-vpn'] %></h2>
+                            <small>VPN Server Logins</small>
+                            <div class="progress progress-mini">
+                                <div class="progress-bar" style="width: <%= p(@logins['login-vpn'],@total_logins) %>%;"></div>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+        </div>
+
+        <div class="m-t-md">
+            <small class="pull-right">
+                <i class="fa fa-clock-o"> </i>
+                Update now
+            </small>
+            <small>
+                <strong>Analysis of logins:</strong> We monitor where you login from for security purposes to help protect you and the network.
+            </small>
+        </div>
+
+    </div>
+</div>
+<script>
+$(document).ready(function(){
+  Morris.Area({
+    element: 'lineChart',
+    data: <%= JSON.dump @logins_by_date.values %>,
+    xkey: 'date',
+    ykeys: ['login', 'login-vpn'],
+    labels: ['Self-Server', 'VPN'],
+    pointSize: 2,
+    parseTime: false,
+    hideHover: 'auto',
+    resize: true,
+    lineColors: ['#87d6c6', '#54cdb4','#1ab394'],
+    lineWidth:2,
+    pointSize:1,
+});
+});
+</script>

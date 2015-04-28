@@ -1,6 +1,6 @@
 controller do
   before '/admin*' do
-    redirect_to '/' unless is_admin?
+    redirect '/' unless is_admin?
   end
 
   namespace '/admin' do

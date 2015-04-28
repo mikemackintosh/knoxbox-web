@@ -10,6 +10,7 @@
           <tr>
             <th>#</th>
             <th>Username</th>
+            <th>IP</th>
             <th>Name</th>
             <th>Email</th>
             <th>Role</th>
@@ -22,12 +23,12 @@
           <tr>
             <td><%= user.id %></td>
             <td><%= user.username %></td>
+            <td>10.1.x.x</td>
             <td><%= user.given_name %> <%= user.family_name %></td>
             <td><%= user.email %></td>
             <td><%= user.roles.first.role %></td>
             <td><span class="label label-<% if user.activated %>success<% else %>danger<% end %>"><%= user.activated %></span></td>
             <td>
-              <a href="/admin/users/<%= user.username %>" class="btn btn-xs btn-primary"><i class="glyphicon glyphicon-eye-open"></i>View</a>
               <a href="/admin/users/<%= user.username %>/edit" class="btn btn-xs btn-success"><i class="glyphicon glyphicon-pencil"></i>Edit</a>
               <a href="/admin/users/<%= user.username %>/disable" class="btn btn-xs btn-danger"><i class="glyphicon glyphicon-remove"></i>Disable</a>
             </td>

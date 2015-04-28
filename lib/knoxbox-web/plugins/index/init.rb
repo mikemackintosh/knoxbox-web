@@ -1,12 +1,7 @@
 controller do 
   namespace '/' do
     get '/' do
-      
-      if is_admin?
-        
-      end
-
-      erb :index
+      redirect '/user/manage'
     end
   end 
 end

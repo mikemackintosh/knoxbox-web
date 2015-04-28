@@ -7,6 +7,7 @@ class CreateUsers < ActiveRecord::Migration
       t.string  :method, :default => 'password'
       t.string  :given_name
       t.string  :family_name
+      t.string  :ip
       t.string  :picture
       t.string  :secret
       t.text    :cert

@@ -112,6 +112,8 @@ controller do
 
 # Log the user out
   get '/logout' do
+    log('User successfully logged out', 'logout')
+
       
   # Revoke the token
     HTTParty.get("https://accounts.google.com/o/oauth2/revoke?token=#{session[:access_token]}")
@@ -159,6 +161,7 @@ controller do
       if user_info['hd'].eql? HOSTED_DOMAIN
         user_info['username'] = user_info['email'].gsub("@#{HOSTED_DOMAIN}", '')
         session[:user] = user_info
+        log('User successfully logged in', 'login')
 
       # Time to add user details to the database
         @user = User.find_or_create_by(username: session[:user]['username'])
@@ -170,6 +173,7 @@ controller do
       # Only create a secret if it doesnt exist already
         if @user.secret.nil?
           @user.secret = (0...16).map { ('A'..'Z').to_a[rand(26)] }.join
+          redirect '/user/manage'
         end
       
       # Save the user details
