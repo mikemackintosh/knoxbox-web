@@ -1,7 +1,7 @@
 controller do 
   namespace '/' do
     get '/' do
-      redirect '/user/manage'
+      redirect '/user/dashboard'
     end
   end 
 end

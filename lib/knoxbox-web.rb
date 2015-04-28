@@ -13,6 +13,7 @@ require 'sinatra/activerecord'
 require 'securerandom'
 require 'slackdraft'
 require 'json'
+require 'rotp'
 
 # stdlib Extensions
 require 'knoxbox-web/ext/hash'

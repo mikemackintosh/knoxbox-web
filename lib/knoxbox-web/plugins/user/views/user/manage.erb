@@ -1,74 +1,115 @@
-<div class="ibox float-e-margins">
-    <div class="ibox-content">
-        <div>
-            <span class="pull-right text-right">
-            <small>Recent logins for user: <strong><%= session[:user]['username'] %></strong></small>
-                <br>
-                Total Logins: <%= @total_logins %>
-            </span>
-            <h3 class="font-bold no-margins">
-                Recent Logins
-            </h3>
-            <small>Both Self-Service and VPN</small>
+<div class="row">
+  <% unless flash[:success].nil? %>
+  <div class="alert alert-success">
+    <%= flash[:success] %>
+  </div>
+  <% end %>
+  <% unless flash[:error].nil? %>
+  <div class="alert alert-danger">
+    <%= flash[:error] %>
+  </div>
+  <% end %>
+    <div class="col-lg-5">
+        <div class="ibox float-e-margins">
+            <div class="ibox-title">
+                <h5>Manage Account</h5>
+            </div>
+            <div class="ibox-content">
+                <form class="form-horizontal" action="/user/manage" method="POST">
+                    <p>Manage your account details below:</p>
+                    <div class="form-group"><label class="col-lg-2 control-label">Password</label>
+                        <div class="col-lg-10"><input type="password" name="password" placeholder="Password" class="form-control"></div>
+                    </div>
+                    <div class="form-group"><label class="col-lg-2 control-label">Confirm Password</label>
+                        <div class="col-lg-10"><input type="password" name="cpassword" placeholder="Confirm Password" class="form-control"></div>
+                    </div>                    
+                    <div class="form-group">
+                        <div class="col-lg-offset-2 col-lg-10">
+                            <button class="btn btn-sm btn-white" type="submit">Save</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
         </div>
-
-        <div class="m-t-sm">
-
-            <div class="row">
-                <div class="col-md-8">
-                  <div class="ibox-content" style="position: relative">
-                    <div id="lineChart"></div>
-                  </div>
-                </div>
-                <div class="col-md-4">
-                    <ul class="stat-list m-t-lg">
-                        <li>
-                            <h2 class="no-margins"><%= @logins['login'] %></h2>
-                            <small>Self-Service Portal Logins</small>
-                            <div class="progress progress-mini">
-                                <div class="progress-bar" style="width: <%= p(@logins['login'],@total_logins)%>%;"></div>
-                            </div>
-                        </li>
-                        <li>
-                            <h2 class="no-margins "><%= @logins['login-vpn'] %></h2>
-                            <small>VPN Server Logins</small>
-                            <div class="progress progress-mini">
-                                <div class="progress-bar" style="width: <%= p(@logins['login-vpn'],@total_logins) %>%;"></div>
-                            </div>
-                        </li>
-                    </ul>
+        <div class="ibox float-e-margins">
+            <div class="ibox-title">
+                <h5>Test Authentication</h5>
+            </div>
+            <div class="ibox-content">
+                <form class="form-horizontal" action="/user/test" method="POST">
+                    <p>You can test either your password or token:</p>
+                    <div class="form-group"><label class="col-lg-2 control-label">Password</label>
+                        <div class="col-lg-10"><input type="password" name="password" placeholder="Password" class="form-control"></div>
+                    </div>
+                    <div class="form-group"><label class="col-lg-2 control-label">Token</label>
+                        <div class="col-lg-10"><input type="text" name="token" placeholder="Token" class="form-control"></div>
+                    </div>                    
+                    <div class="form-group">
+                        <div class="col-lg-offset-2 col-lg-10">
+                            <button class="btn btn-sm btn-white" type="submit">Test</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-7">
+        <div class="ibox float-e-margins">
+            <div class="ibox-title">
+                <h5>2-Factor Authentication <small>Setup 2FA Token</small></h5>
+            </div>
+            <div class="ibox-content">
+                <div class="row">
+                    <div class="col-sm-6 b-r"><h3 class="m-t-none m-b">Token Management </h3>
+                        <p>Manage your secret key below. The secret provided from the barcode and secret are used to generate a token, used in authentication.</p>
+                        <div>
+                            <br /><br />
+                            <button type="button" class="btn btn-sm m-t-n-xs btn-primary btn-block view-secret" data-toggle="modal" data-target="#myModal">
+                                <b>View Secret Key</b>
+                            </button>
+                        </div>                            
+                    </div>
+                    <div class="col-sm-6"><h4>QR Code</h4>
+                        <p>Scan the barcode below with Google Authenticator:</p>
+                        <p class="text-center">
+                            <img id="qrImg" />
+                        </p>
+                    </div>  
                 </div>
             </div>
-
         </div>
+    </div>
+</div>
 
-        <div class="m-t-md">
-            <small class="pull-right">
-                <i class="fa fa-clock-o"> </i>
-                Update now
-            </small>
-            <small>
-                <strong>Analysis of logins:</strong> We monitor where you login from for security purposes to help protect you and the network.
-            </small>
+<div class="modal inmodal in" id="myModal" tabindex="-1" role="dialog" aria-hidden="false" style="padding-right: 15px;">
+    <div class="modal-dialog">
+    <div class="modal-content animated bounceInRight">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">×</span><span class="sr-only">Close</span></button>
+                <i class="fa fa-lock modal-icon"></i>
+                <h4 class="modal-title">Secret Key</h4>
+                <small class="font-bold">This secret key is pretty important. Please keep it safe.</small>
+            </div>
+            <div class="modal-body">
+              <div class="form-group"><input type="secret" placeholder="Secret Key" class="form-control" style="text-align:center;" value="<%= @user.secret %>"></div>
+            </div>
+            <div class="modal-footer">
+                <form action="/user/manage" method="POST">
+                    <button class="btn btn-danger" type="submit" name="regenerate_token">
+                        Regenerate Secret
+                    </button>            
+                    <button type="button" class="btn btn-white" data-dismiss="modal">Close</button>
+                </form>
+            </div>
         </div>
-
     </div>
 </div>
 <script>
 $(document).ready(function(){
-  Morris.Area({
-    element: 'lineChart',
-    data: <%= JSON.dump @logins_by_date.values %>,
-    xkey: 'date',
-    ykeys: ['login', 'login-vpn'],
-    labels: ['Self-Server', 'VPN'],
-    pointSize: 2,
-    parseTime: false,
-    hideHover: 'auto',
-    resize: true,
-    lineColors: ['#87d6c6', '#54cdb4','#1ab394'],
-    lineWidth:2,
-    pointSize:1,
-});
+  $('.view-secret').click(function(){
+
+  });
+
+  $('#qrImg').attr('src', 'https://chart.googleapis.com/chart?chs=200x200&cht=qr&chl=200x200&chld=M|0&cht=qr&chl=otpauth://totp/<%= @user.username%>@<%=HOSTED_DOMAIN%>%3Fsecret%3D<%= @user.secret %>%26issuer%3DKnoxBox');
 });
 </script>
