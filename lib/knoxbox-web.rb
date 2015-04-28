@@ -12,6 +12,7 @@ require 'sinatra/activerecord'
 # 3rd Party Deps
 require 'securerandom'
 require 'slackdraft'
+require 'json'
 
 # stdlib Extensions
 require 'knoxbox-web/ext/hash'

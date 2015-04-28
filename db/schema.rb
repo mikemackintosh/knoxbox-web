@@ -15,6 +15,7 @@ ActiveRecord::Schema.define(version: 8) do
 
   create_table "logs", force: :cascade do |t|
     t.string   "message"
+    t.string   "category"
     t.string   "remote_host"
     t.string   "cn"
     t.string   "instance_id"
@@ -74,6 +75,7 @@ ActiveRecord::Schema.define(version: 8) do
     t.string   "method",          default: "password"
     t.string   "given_name"
     t.string   "family_name"
+    t.string   "ip"
     t.string   "picture"
     t.string   "secret"
     t.text     "cert"
