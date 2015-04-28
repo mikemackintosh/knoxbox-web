@@ -7,3 +7,4 @@
 /config/databases.yml
 /config/databases.yaml
 Gemfile.lock
+lib/knoxbox-web/assets/
