@@ -34,12 +34,28 @@ namespace :knoxbox  do
     ca_key.content = "#{g[:key]}"
     ca_key.save
 
+    puts "Created CA certificate and key"
   end
 
-# IMports existing CA cert and key
-  task :import_ca do
+# Export files needed by openvpn
+  task :export_openvpn do
+    ca_key = Pki.find_or_create_by(is: 'ca_key').content
+    File.write("#{KNOXBOX_DIR}/knoxbox-ca.key", ca_key)
+
+    ca_cert = Pki.find_or_create_by(is: 'ca_cert').content
+    File.write("#{KNOXBOX_DIR}/knoxbox-ca.crt", ca_cert)
+
+    crl = Pki.find_or_create_by(is: 'crl').content
+    File.write("#{KNOXBOX_DIR}/knoxbox.crl", crl)
+
+    puts "These files have been saved to '#{KNOXBOX_DIR}/"
+  end
+
+# Imports existing CA cert and key
+=begin  task :import_ca do
     ENV['CA_KEY']
     ENV['CA_CERT']
   end
+=end
 end
 
