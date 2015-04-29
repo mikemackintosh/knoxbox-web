@@ -9,7 +9,7 @@ def log(message, type='general', instance=nil)
     l.category = type
     l.message = message
     l.instance_id = instance
-    l.cn = session[:user]['username']
+    l.cn = session[:user]['username'] ||= 'anonymous'
     l.remote_host = @env['REMOTE_ADDR']
     l.save!
   end
@@ -34,6 +34,8 @@ module KnoxBoxWeb
     unless Config.get(:database).nil?   
       ActiveRecord::Base.establish_connection(Config.get(:database))
     end
+
+  # Load the models now ActiveRecord has config
     require 'knoxbox-web/models/init'
 
   # Default configuration 

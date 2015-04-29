@@ -1,0 +1,21 @@
+client
+dev tun
+auth-user-pass
+auth-nocache
+remote-random
+reneg-sec 0
+resolv-retry infinite
+nobind
+persist-key
+persist-tun
+<ca>
+<%= @ca_cert %>
+</ca>
+<cert>
+<%= @user_certificate.to_text %>
+<%= @user_certificate %>
+</cert>
+<key>
+<%= @user.key %>
+</key>
+comp-lzo
