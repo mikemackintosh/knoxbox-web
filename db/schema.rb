@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 8) do
+ActiveRecord::Schema.define(version: 9) do
 
   create_table "logs", force: :cascade do |t|
     t.string   "message"
@@ -46,6 +46,11 @@ ActiveRecord::Schema.define(version: 8) do
     t.text     "description"
     t.datetime "created_at"
     t.datetime "updated_at"
+  end
+
+  create_table "pki", force: :cascade do |t|
+    t.string "is"
+    t.text   "content"
   end
 
   create_table "roles", force: :cascade do |t|
