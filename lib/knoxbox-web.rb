@@ -12,11 +12,13 @@ require 'sinatra/activerecord'
 # 3rd Party Deps
 require 'securerandom'
 require 'slackdraft'
+require 'easyrsa'
 require 'json'
 require 'rotp'
 
 # stdlib Extensions
 require 'knoxbox-web/ext/hash'
+require 'knoxbox-web/easyrsa'
 
 # Set Project Root
 PROJECT_ROOT = File.dirname(__FILE__)

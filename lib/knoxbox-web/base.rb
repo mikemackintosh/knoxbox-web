@@ -30,6 +30,12 @@ module KnoxBoxWeb
                            :expire_after => 3600,
                            :secret => 't6xws7f8BSSWcP7INqCrcAs==' #SecureRandom.base64
 
+  # Create the database connection
+    unless Config.get(:database).nil?   
+      ActiveRecord::Base.establish_connection(Config.get(:database))
+    end
+    require 'knoxbox-web/models/init'
+
   # Default configuration 
     configure do
       disable   :debug
@@ -52,9 +58,13 @@ module KnoxBoxWeb
       set       :public_folder,     Proc.new { File.join(root, "knoxbox-web/assets") }
       set       :static,            true
 
+    # Configure the EasyRSA stuff
+      set :easyrsa,                 ::EasyRSA::Config.from_hash(Config.get(:'easyrsa.issuer'))
+
     # Define these, they are important for OpenVPN
-      set :ca_cert, Config.get(:'openvpn.ca_cert')
-      set :ca_key, Config.get(:'openvpn.ca_key')
+      set :ca_cert,                 Pki.find_or_create_by(is: 'ca_cert').content
+      set :ca_key,                  Pki.find_or_create_by(is: 'ca_key').content
+
     end
 
   # Define route conditions on environment
@@ -63,11 +73,6 @@ module KnoxBoxWeb
   # Read the Application Configs
     unless Config.get(:global).nil?
       set :config, Config.get(:global)
-    end
-  
-  # Create the database connection
-    unless Config.get(:database).nil?   
-      ActiveRecord::Base.establish_connection(Config.get(:database))
     end
 
   # Discover plugins
@@ -153,6 +158,7 @@ module KnoxBoxWeb
       def p(what, of)
         (what.to_f  / of.to_f )*100
       end
+   
     end
 
     not_found do
