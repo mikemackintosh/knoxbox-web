@@ -22,8 +22,9 @@ Gem::Specification.new do |s|
   s.executables   = s.files.grep(%r{^bin/}) { |f| File.basename(f) }
   s.test_files    = s.files.grep(%r{^(test|spec|features)/})
 
-  s.add_dependency 'knoxbox'      
+  s.add_dependency 'knoxbox'
   s.add_dependency 'sinatra'
+  s.add_dependency 'easyrsa', '~> 0.9.1'
   s.add_dependency 'sinatra-contrib'
   s.add_dependency 'sinatra-cross_origin'
   s.add_dependency 'sinatra-activerecord'
